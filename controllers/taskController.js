@@ -2,6 +2,14 @@ const Task = require('../models/Task');
 
 const taskController = {};
 
+/** 
+{
+  "task": "third-2 data",
+  "isComplete": false
+}
+*/
+
+
 taskController.createTask = async (req, res) => {
     try {
         const { task, isComplete } = req.body;
@@ -22,5 +30,38 @@ taskController.getTasks = async (req, res) => {
         return res.status(400).json({ status: "fail", message: error.message });
     }
 };
+
+taskController.updateTask = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const { task, isComplete } = req.body;
+
+        const taskDB = await Task.findById(id);
+        if (!taskDB) {
+            throw new Error("Task not found");
+        }
+        taskDB.task = task;
+        taskDB.isComplete = isComplete;
+        await taskDB.save();
+            return res.status(200).json({ status: "ok", data: taskDB });
+
+    } catch (error) {   
+        return res.status(400).json({ status: "fail", message: error.message });
+    }
+};
+
+taskController.deleteTask = async (req, res) => {
+    try {
+        const id = req.params.id;
+        await Task.findByIdAndDelete(id);
+
+        return res.status(200).json({ status: "ok", message: "Task deleted"});
+
+    } catch (error) {   
+        return res.status(400).json({ status: "fail", message: error.message });
+    }
+};
+
+
 
 module.exports = taskController;

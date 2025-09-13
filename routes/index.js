@@ -9,7 +9,7 @@ const express = require('express');
 const router = express.Router();
 const taskApi = require("./task.api");
 
-console.log("b4 task api");
+//console.log("b4 task api");
 router.use("/tasks", taskApi);
 // router.use("/products", productApi);
 
